@@ -11,16 +11,10 @@ import java.lang.reflect.GenericArrayType;
 
 
 public class Player {
-    private final int SCREEN_HEIGHT = 720;
-    private final int SCREEN_WIDTH = 1280;
     private float SPEED = 10f;
-    private final float MAX_SPEED = 35.0f;
-    private final float FRICTION = 0.1f;
-//    private boolean isIt = false;
+    //    private boolean isIt = false;
     private boolean isGrounded = false;
     private boolean canJump = false;
-    private float GRAVITY_FORCE = 0.5f;
-    private float JUMPFORCE = 32f;
     private final Vector2 position;
     private final Vector2 velocity = new Vector2(0,0);
     private final Vector2 acceleration = new Vector2(2.5f,0f);
@@ -60,6 +54,12 @@ public class Player {
 
     //gets the movement inputs and applies them
     private void vectorMovement(){
+
+        int SCREEN_WIDTH = 1280;
+        int SCREEN_HEIGHT = 720;
+        float MAX_SPEED = 35.0f;
+        float FRICTION = 0.1f;
+
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
             //We also repeat the same steps
             if (this.position.y + (1 * SPEED) * this.acceleration.x > SCREEN_HEIGHT - sprite.getHeight()) {
@@ -89,6 +89,7 @@ public class Player {
             }
         }
 
+
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
             //we need to subtract the player width because the
             //coordinates are based off the bottom left of the sprite
@@ -103,11 +104,13 @@ public class Player {
             this.acceleration.x = 0.2f;
         }
 
+
         if (!Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[2])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
             this.acceleration.x = this.velocity.x * FRICTION;
         }
 
         this.velocity.x += this.acceleration.x;
+
 
         if(this.position.x + this.velocity.x <= 0){
             this.position.x = 0;
@@ -117,9 +120,9 @@ public class Player {
             this.position.x = SCREEN_WIDTH - sprite.getWidth();
             this.velocity.x = 0;
         }
-        else if(this.velocity.x > MAX_SPEED || this.velocity.x < MAX_SPEED*-1){
+        else if(this.velocity.x > MAX_SPEED || this.velocity.x < MAX_SPEED *-1){
             if(this.velocity.x<0){
-                this.velocity.x = MAX_SPEED*-1;
+                this.velocity.x = MAX_SPEED *-1;
             }
             else{
                 this.velocity.x = MAX_SPEED;
@@ -142,9 +145,9 @@ public class Player {
             this.position.y = SCREEN_HEIGHT - sprite.getHeight();
             this.velocity.y = 0;
         }
-        else if(this.velocity.y > MAX_SPEED || this.velocity.y < MAX_SPEED*-1){
+        else if(this.velocity.y > MAX_SPEED || this.velocity.y < MAX_SPEED *-1){
             if(this.velocity.y<0){
-                this.velocity.y = MAX_SPEED*-1;
+                this.velocity.y = MAX_SPEED *-1;
             }
             else{
                 this.position.y += this.velocity.y;
@@ -158,9 +161,10 @@ public class Player {
     }
 
     private void jump(){
+        float JUMPFORCE = 32f;
         if(this.canJump){
             this.position.y=0;
-            this.position.y+=5*JUMPFORCE;
+            this.position.y+=5* JUMPFORCE;
             this.canJump=false;
         }
     }
@@ -177,6 +181,7 @@ public class Player {
     }
 
     private void gravity(){
+        float GRAVITY_FORCE = 0.5f;
         if(!this.isGrounded && this.position.y-5 * GRAVITY_FORCE >=0){
             this.position.y -= 5 * GRAVITY_FORCE;
         } else if(this.position.y-5 * GRAVITY_FORCE <=0) {

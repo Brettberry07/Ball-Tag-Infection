@@ -1,18 +1,12 @@
 package com.libgdx.example;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.FisheyeEffect;
-import com.crashinvaders.vfx.effects.GaussianBlurEffect;
-import com.crashinvaders.vfx.effects.VfxEffect;
-import static com.badlogic.gdx.graphics.TextureData.TextureDataType.Pixmap;
+
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -39,8 +33,8 @@ public class Main extends Game {
         player2.setPosition(500,250);
 
         //Vfx manager
-        vfxManager = new VfxManager(com.badlogic.gdx.graphics.Pixmap.Format.RGB888);
-        effectOne = new FisheyeEffect();
+//        vfxManager = new VfxManager(com.badlogic.gdx.graphics.Pixmap.Format.RGB888);
+//        effectOne = new FisheyeEffect();
 //        vfxManager.addEffect(effectOne);
 
         setScreen(new FirstScreen());
@@ -57,8 +51,8 @@ public class Main extends Game {
 
         player1.draw(batch);
         player1.update();
-//        player2.draw(batch);
-//        player2.update();
+        player2.draw(batch);
+        player2.update();
         batch.end();
 
 //        vfxManager.endInputCapture();
