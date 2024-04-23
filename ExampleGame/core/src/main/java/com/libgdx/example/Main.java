@@ -51,8 +51,8 @@ public class Main extends Game {
 
         player1.draw(batch);
         player1.update();
-        player2.draw(batch);
-        player2.update();
+//        player2.draw(batch);
+//        player2.update();
         batch.end();
 
 //        vfxManager.endInputCapture();

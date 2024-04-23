@@ -7,12 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.lang.reflect.GenericArrayType;
-
 
 public class Player {
-    private float SPEED = 10f;
-    private final float JUMPFORCE = 32f;
+
+    private final float GRAVITY_FORCE = 0.5f;
+
     //    private boolean isIt = false;
     private boolean isGrounded = false;
     private boolean canJump = false;
@@ -44,32 +43,28 @@ public class Player {
         this.position.y = y;
     }
 
-    public void setSpeed(float speed) {
-        this.SPEED = speed;
-    }
-
     public void update(){
-        this.checkGrounded();
         this.vectorMovement();
+        this.checkGrounded();
         this.gravity();
     }
 
     //gets the movement inputs and applies them
     private void vectorMovement(){
 
-        int SCREEN_WIDTH = 1280;
-        int SCREEN_HEIGHT = 720;
-        float MAX_SPEED = 35.0f;
-        float FRICTION = 0.1f;
+        final int SCREEN_WIDTH = 1280;
+        final int SCREEN_HEIGHT = 720;
+        final float SPEED = 10f;
+        final float MAX_SPEED = 35.0f;
+        final float FRICTION = 0.1f;
+        final float JUMPFORCE = 32f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
-//            //We also repeat the same steps
-//            if (this.position.y + (1 * SPEED) * this.acceleration.x > SCREEN_HEIGHT - sprite.getHeight()) {
-//                this.position.y = SCREEN_HEIGHT - sprite.getHeight();
-//            } else {
-//                this.velocity.y += 1 * SPEED;
-//            }
-            this.jump();
+            if(this.canJump) {
+                this.isJumping = true;
+                this.velocity.y += 1.5f * JUMPFORCE;
+                this.canJump = false;
+            }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))) {
@@ -137,7 +132,7 @@ public class Player {
             this.velocity.x *= FRICTION;
         }
 
-
+//###################################Seperating X and Y velocity###########################################################################
 
         if(this.position.y + this.velocity.y <=0){
             this.position.y = 0;
@@ -157,18 +152,9 @@ public class Player {
         }
         else{
             this.position.y += this.velocity.y;
-            this.velocity.y *= FRICTION;
+            this.velocity.y *= GRAVITY_FORCE;
         }
 
-    }
-
-    private void jump(){
-
-        if(this.canJump){
-            this.isJumping = true;
-            this.velocity.y+=1.5f*JUMPFORCE;
-            this.canJump=false;
-        }
     }
 
     private void checkGrounded(){
@@ -184,7 +170,6 @@ public class Player {
     }
 
     private void gravity(){
-        float GRAVITY_FORCE = 0.5f;
         if(!this.isGrounded && !this.isJumping) {
             this.velocity.y += -10*GRAVITY_FORCE;
         }
