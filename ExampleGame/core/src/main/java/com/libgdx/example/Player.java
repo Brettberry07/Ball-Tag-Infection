@@ -12,9 +12,11 @@ import java.lang.reflect.GenericArrayType;
 
 public class Player {
     private float SPEED = 10f;
+    private final float JUMPFORCE = 32f;
     //    private boolean isIt = false;
     private boolean isGrounded = false;
     private boolean canJump = false;
+    private boolean isJumping = false;
     private final Vector2 position;
     private final Vector2 velocity = new Vector2(0,0);
     private final Vector2 acceleration = new Vector2(2.5f,0f);
@@ -49,7 +51,7 @@ public class Player {
     public void update(){
         this.checkGrounded();
         this.vectorMovement();
-//        this.gravity();
+        this.gravity();
     }
 
     //gets the movement inputs and applies them
@@ -61,13 +63,13 @@ public class Player {
         float FRICTION = 0.1f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
-            //We also repeat the same steps
-            if (this.position.y + (1 * SPEED) * this.acceleration.x > SCREEN_HEIGHT - sprite.getHeight()) {
-                this.position.y = SCREEN_HEIGHT - sprite.getHeight();
-            } else {
-                this.velocity.y += 1 * SPEED;
-            }
-//            this.jump();
+//            //We also repeat the same steps
+//            if (this.position.y + (1 * SPEED) * this.acceleration.x > SCREEN_HEIGHT - sprite.getHeight()) {
+//                this.position.y = SCREEN_HEIGHT - sprite.getHeight();
+//            } else {
+//                this.velocity.y += 1 * SPEED;
+//            }
+            this.jump();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))) {
@@ -145,7 +147,7 @@ public class Player {
             this.position.y = SCREEN_HEIGHT - sprite.getHeight();
             this.velocity.y = 0;
         }
-        else if(this.velocity.y > MAX_SPEED || this.velocity.y < MAX_SPEED *-1){
+        else if(this.velocity.y > JUMPFORCE || this.velocity.y < MAX_SPEED *-1){
             if(this.velocity.y<0){
                 this.velocity.y = MAX_SPEED *-1;
             }
@@ -161,10 +163,10 @@ public class Player {
     }
 
     private void jump(){
-        float JUMPFORCE = 32f;
+
         if(this.canJump){
-            this.position.y=0;
-            this.position.y+=5* JUMPFORCE;
+            this.isJumping = true;
+            this.velocity.y+=1.5f*JUMPFORCE;
             this.canJump=false;
         }
     }
@@ -177,15 +179,14 @@ public class Player {
         }
         else{
             this.isGrounded = false;
+            this.isJumping = false;
         }
     }
 
     private void gravity(){
         float GRAVITY_FORCE = 0.5f;
-        if(!this.isGrounded && this.position.y-5 * GRAVITY_FORCE >=0){
-            this.position.y -= 5 * GRAVITY_FORCE;
-        } else if(this.position.y-5 * GRAVITY_FORCE <=0) {
-            this.position.y = 0;
+        if(!this.isGrounded && !this.isJumping) {
+            this.velocity.y += -10*GRAVITY_FORCE;
         }
     }
 }
