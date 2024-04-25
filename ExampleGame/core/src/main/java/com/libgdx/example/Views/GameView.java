@@ -1,13 +1,11 @@
 package com.libgdx.example.Views;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.BloomEffect;
@@ -22,19 +20,13 @@ public class GameView implements Disposable {
 
     private BloomEffect bloomEffect;
 
-    public GameView()
+    public GameView(Player player)
     {
-        String[] player1Controls = {"W","A","S","D"};
+        this.player1 = player;
 
         batch = new SpriteBatch();
-        img = new Texture("player.png");
-        player1 = new Player(img, player1Controls);
-        player1.setPosition(250,100);
 
         OrthographicCamera cam = new OrthographicCamera();
-
-        Texture player_img = new Texture("Player.png");
-        Player player = new Player(player_img, player1Controls);
 
         vfxManager = new VfxManager(Pixmap.Format.RGB888);
 
