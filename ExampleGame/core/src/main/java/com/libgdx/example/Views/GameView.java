@@ -40,7 +40,7 @@ public class GameView implements Disposable {
 
         batch.begin();
         player1.draw(batch);
-        player1.update();
+        player1.update(delta);
         batch.end();
     }
 

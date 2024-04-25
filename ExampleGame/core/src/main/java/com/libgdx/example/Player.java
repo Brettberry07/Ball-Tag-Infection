@@ -43,18 +43,19 @@ public class Player {
         this.position.y = y;
     }
 
-    public void update(){
-        this.vectorMovement();
+    public void update(float delta){
+        this.vectorMovement(delta);
         this.checkGrounded();
         this.gravity();
     }
 
     //gets the movement inputs and applies them
-    private void vectorMovement(){
+    private void vectorMovement(float delta){
 
         final int SCREEN_WIDTH = 1280;
         final int SCREEN_HEIGHT = 720;
         final float SPEED = 10f;
+        final float JUMP_SPEED = 100f;
         final float MAX_SPEED = 35.0f;
         final float FRICTION = 0.1f;
         final float JUMPFORCE = 32f;
@@ -62,7 +63,7 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
             if(this.canJump) {
                 this.isJumping = true;
-                this.velocity.y += 1.5f * JUMPFORCE;
+                this.velocity.y += 1.5f * JUMPFORCE * delta * JUMP_SPEED;
                 this.canJump = false;
             }
         }
