@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.crashinvaders.vfx.VfxManager;
-import com.crashinvaders.vfx.effects.BloomEffect;
+import com.crashinvaders.vfx.effects.*;
+import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.libgdx.example.Player;
 
 public class GameView implements Disposable {
@@ -19,6 +20,8 @@ public class GameView implements Disposable {
     private VfxManager vfxManager;
 
     private BloomEffect bloomEffect;
+    private FxaaEffect fxaaEffect;
+    private MotionBlurEffect motionBlurEffect;
 
     public GameView(Player player)
     {
@@ -31,17 +34,38 @@ public class GameView implements Disposable {
         vfxManager = new VfxManager(Pixmap.Format.RGB888);
 
         bloomEffect = new BloomEffect();
+        fxaaEffect = new FxaaEffect();
+        motionBlurEffect = new MotionBlurEffect(Pixmap.Format.RGBA8888, MixEffect.Method.MAX, 0.25f);
+
         vfxManager.addEffect(bloomEffect);
+        vfxManager.addEffect(fxaaEffect);
+        vfxManager.addEffect(motionBlurEffect);
     }
 
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+        vfxManager.cleanUpBuffers();
+
+        updateEffects(delta);
+
+        vfxManager.beginInputCapture();
         batch.begin();
         player1.draw(batch);
         player1.update(delta);
         batch.end();
+        vfxManager.endInputCapture();
+
+        vfxManager.applyEffects();
+        vfxManager.renderToScreen();
+    }
+
+    private void updateEffects(float delta)
+    {
+        bloomEffect.update(delta);
+        fxaaEffect.update(delta);
+        motionBlurEffect.update(delta);
     }
 
     public void resize(int width, int height) {
