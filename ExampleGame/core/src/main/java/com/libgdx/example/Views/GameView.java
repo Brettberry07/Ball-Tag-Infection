@@ -23,6 +23,13 @@ public class GameView implements Disposable {
     private FxaaEffect fxaaEffect;
     private MotionBlurEffect motionBlurEffect;
 
+    /*
+        We will need to make a GameObjects array
+        that will be iterated and drawn soon, one
+        player may be okay but once we add two or
+        more it'll be quite hectic to manage this codebase
+     */
+
     public GameView(Player player)
     {
         this.player1 = player;
