@@ -15,18 +15,22 @@ public class GameScreen extends ScreenAdapter {
     SpriteBatch batch;
     Texture img;
     Player player1;
+    Player player2;
 
     public GameScreen()
     {
         String[] player1Controls = {"W","A","S","D"};
+        String[] player2Controls = {"I","J","K","L"};
 
         img = new Texture("player.png");
         player1 = new Player(img, player1Controls);
         player1.setPosition(250,100);
+        player2 = new Player(img, player2Controls);
+        player2.setPosition(0,0);
     }
     @Override
     public void show() {
-        gameView = new GameView(player1);
+        gameView = new GameView(player1, player2);
     }
 
     @Override

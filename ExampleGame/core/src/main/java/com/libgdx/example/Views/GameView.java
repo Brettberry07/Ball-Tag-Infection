@@ -16,12 +16,13 @@ public class GameView implements Disposable {
     SpriteBatch batch;
     Texture img;
     Player player1;
+    Player player2;
 
-    private VfxManager vfxManager;
+    private final VfxManager vfxManager;
 
-    private BloomEffect bloomEffect;
-    private FxaaEffect fxaaEffect;
-    private MotionBlurEffect motionBlurEffect;
+    private final BloomEffect bloomEffect;
+    private final FxaaEffect fxaaEffect;
+    private final MotionBlurEffect motionBlurEffect;
 
     /*
         We will need to make a GameObjects array
@@ -30,9 +31,10 @@ public class GameView implements Disposable {
         more it'll be quite hectic to manage this codebase
      */
 
-    public GameView(Player player)
+    public GameView(Player player1, Player player2)
     {
-        this.player1 = player;
+        this.player1 = player1;
+        this.player2 = player2;
 
         batch = new SpriteBatch();
 
@@ -61,6 +63,8 @@ public class GameView implements Disposable {
         batch.begin();
         player1.draw(batch);
         player1.update(delta);
+        player2.draw(batch);
+        player2.update(delta);
         batch.end();
         vfxManager.endInputCapture();
 
