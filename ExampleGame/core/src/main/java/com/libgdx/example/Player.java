@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Disposable;
 
 
-public class Player {
+public class Player implements Disposable{
 
     private final float GRAVITY_FORCE = -0.5f;
 
@@ -44,10 +45,10 @@ public class Player {
         this.position.y = y;
     }
 
-    public void update(){
-        this.vectorMovement();
+    public void update(float delta){
+        this.vectorMovement(delta);
         this.checkGrounded();
-        this.gravity();
+//        this.gravity();
     }
 
     //gets the movement inputs and applies them
@@ -165,33 +166,33 @@ public class Player {
 //        this.velocity.y = 0;
 //    }
 
-    public void vectorMovement(){
+    public void vectorMovement(float deltaTime){
         final int SCREEN_WIDTH = 1280;
         final int SCREEN_HEIGHT = 720;
         final float SPEED = 10f;
-        final float MAX_SPEED = 35.0f;
-        final float JUMPFORCE = 36f;
+        final float JUMPFORCE = 750f;
 
         if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
             if(isGrounded){
-                this.velocity.y = JUMPFORCE;
+                this.velocity.y = JUMPFORCE*deltaTime;
+                this.isJumping = !this.isJumping;
             }
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))){
-            this.velocity.x = SPEED;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[2]))){
             this.velocity.x = -SPEED;
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))){
+            this.velocity.x = SPEED;
+        }
 
-        this.velocity.add(this.acceleration);
-        this.velocity.add(this.friction);
 
-        if(this.position.x + this.velocity.x > SCREEN_WIDTH){
-            this.position.x = SCREEN_WIDTH;
+        this.velocity.x *= this.acceleration.x;
+        this.velocity.y *= this.acceleration.y;
+
+        if(this.position.x + this.velocity.x > SCREEN_WIDTH - sprite.getWidth()){
+            this.position.x = SCREEN_WIDTH - sprite.getWidth();
         }
         if(this.position.x + this.velocity.x < 0){
             this.position.x = 0;
@@ -203,7 +204,12 @@ public class Player {
             this.position.y = 0;
         }
 
+        if(!this.isGrounded){
+            this.velocity.y += GRAVITY_FORCE;
+        }
+
         this.position.add(this.velocity);
+        this.velocity.x = 0;
 
 
     }
@@ -211,18 +217,22 @@ public class Player {
     private void checkGrounded(){
         if(this.position.y<=0){
             this.isGrounded = true;
-            this.canJump = true;
+            this.isJumping = false;
             this.position.y = 0;
         }
         else{
             this.isGrounded = false;
-            this.isJumping = false;
         }
     }
 
     private void gravity(){
         if(!this.isGrounded && !this.isJumping) {
-            this.velocity.y += -10*GRAVITY_FORCE;
+            this.velocity.y += 10*GRAVITY_FORCE;
         }
+    }
+
+    @Override
+    public void dispose() {
+        ;
     }
 }
