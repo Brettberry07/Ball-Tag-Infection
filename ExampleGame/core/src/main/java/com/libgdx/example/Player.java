@@ -11,16 +11,14 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class Player implements Disposable{
 
-    private final float GRAVITY_FORCE = -0.5f;
+
 
     //    private boolean isIt = false;
     private boolean isGrounded = false;
-    private boolean canJump = false;
     private boolean isJumping = false;
     private final Vector2 position;
     private final Vector2 velocity = new Vector2(0,0);
     private final Vector2 acceleration = new Vector2(1.5f,1f);
-    private final Vector2 friction = new Vector2(-0.2f, GRAVITY_FORCE);
     private final Sprite sprite;
     private final String[] controls;
 
@@ -48,129 +46,15 @@ public class Player implements Disposable{
     public void update(float delta){
         this.vectorMovement(delta);
         this.checkGrounded();
-//        this.gravity();
     }
 
-    //gets the movement inputs and applies them
-//    private void vectorMovement(){
-//
-//        final int SCREEN_WIDTH = 1280;
-//        final int SCREEN_HEIGHT = 720;
-//        final float SPEED = 10f;
-//        final float MAX_SPEED = 35.0f;
-//        final float FRICTION = 0.1f;
-//        final float JUMPFORCE = 36f;
-//        final float MAX_JUMPFORCE = 100000f;
-//
-//        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
-//            if(this.canJump) {
-//                this.isJumping = true;
-//                this.velocity.y += 1.5f * JUMPFORCE;
-//                this.canJump = false;
-//            }
-//        }
-//
-//        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))) {
-//            //checks if it will collide on the side of the screen
-//            if (this.position.x - (1* SPEED)*this.acceleration.x <= 0) {
-//                this.position.x = 0;
-//                this.velocity.x = 0;
-//            } else {
-//                this.velocity.x -= 1 * SPEED;
-//            }
-//        }
-//
-//        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[2]))) {
-//            if (this.position.y - (1 * SPEED)*this.acceleration.x <= 0) {
-//                this.position.y = 0;
-//                this.velocity.y = 0;
-//            } else {
-//                this.velocity.y -= 1 * SPEED;
-//            }
-//        }
-//
-//
-//        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
-//            //we need to subtract the player width because the
-//            //coordinates are based off the bottom left of the sprite
-//
-//            if (this.position.x + (1 * SPEED) * this.acceleration.x > SCREEN_WIDTH - sprite.getWidth()) {
-//                this.position.x = SCREEN_WIDTH - sprite.getWidth();
-//                this.velocity.x = 0;
-//            } else {
-//                this.velocity.x += 1 * SPEED;
-//            }
-//
-//            this.acceleration.x = 0.2f;
-//        }
-//
-//
-//        if (!Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[2])) && !Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
-//            this.acceleration.x = this.velocity.x * FRICTION;
-//        }
-//
-//        this.velocity.add(this.acceleration);
-//
-//
-//        if(this.position.x + this.velocity.x <= 0){
-//            this.position.x = 0;
-//            this.velocity.x = 0;
-//        }
-//        else if(this.position.x + this.velocity.x > SCREEN_WIDTH - sprite.getWidth()){
-//            this.position.x = SCREEN_WIDTH - sprite.getWidth();
-//            this.velocity.x = 0;
-//        }
-//        else if(this.velocity.x > MAX_SPEED || this.velocity.x < MAX_SPEED *-1){
-//            if(this.velocity.x<0){
-//                this.velocity.x = MAX_SPEED *-1;
-//            }
-//            else{
-//                this.velocity.x = MAX_SPEED;
-//            }
-////            this.position.x += this.velocity.x;
-//            this.velocity.x *= FRICTION;
-//        }
-////        else{
-////            this.position.x += this.velocity.x;
-////            this.velocity.x *= FRICTION;
-////        }
-//
-////###################################Seperating X and Y velocity###########################################################################
-//
-//        if(this.position.y + this.velocity.y <=0){
-//            this.position.y = 0;
-//            this.velocity.y = 0;
-//        }
-//        else if(this.position.y + this.velocity.y > SCREEN_HEIGHT - sprite.getHeight()){
-//            this.position.y = SCREEN_HEIGHT - sprite.getHeight();
-//            this.velocity.y = 0;
-//        }
-//        else if(this.velocity.y > JUMPFORCE || this.velocity.y < JUMPFORCE *-1){
-//            if(this.velocity.y<0){
-//                this.velocity.y = JUMPFORCE *-1;
-//                this.velocity.y *= GRAVITY_FORCE;
-//            }
-//            else{
-//                this.velocity.y=JUMPFORCE;
-//                this.velocity.y *= GRAVITY_FORCE;
-////                this.position.y+=this.velocity.y;
-//            }
-//        }
-////        else{
-////            this.position.y += this.velocity.y;
-////            this.velocity.y *= GRAVITY_FORCE;
-////        }
-//
-//        this.position.add(this.velocity.add(this.acceleration));
-//        this.velocity.x = 0;
-//        this.velocity.y = 0;
-//    }
 
     public void vectorMovement(float deltaTime){
         final int SCREEN_WIDTH = 1280;
         final int SCREEN_HEIGHT = 720;
         final float SPEED = 10f;
         final float JUMPFORCE = 750f;
+        final float GRAVITY_FORCE = -0.5f;
 
         if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
             if(isGrounded){
@@ -225,14 +109,6 @@ public class Player implements Disposable{
         }
     }
 
-    private void gravity(){
-        if(!this.isGrounded && !this.isJumping) {
-            this.velocity.y += 10*GRAVITY_FORCE;
-        }
-    }
-
     @Override
-    public void dispose() {
-        ;
-    }
+    public void dispose() {}
 }
