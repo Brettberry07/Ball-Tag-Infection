@@ -1,19 +1,15 @@
 package com.Infection.main.views;
 
+import com.Infection.main.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.*;
 import com.crashinvaders.vfx.effects.util.MixEffect;
-import com.Infection.main.Player;
-
-import static com.Infection.main.uitls.Settings.PixelsPerMeter;
-import static com.Infection.main.uitls.Settings.SCALE;
 
 public class GameView implements Disposable {
 
@@ -53,10 +49,10 @@ public class GameView implements Disposable {
         vfxManager.addEffect(crtEffect);
         vfxManager.addEffect(oldTvEffect);
 
-        bg = new Texture("untitled.png");
+        bg = new Texture("Images/untitled.png");
     }
 
-    public void render(float delta, SpriteBatch batch, Texture img, Body player, Body player1) {
+    public void render(float delta, SpriteBatch batch, Player player) {
         vfxManager.cleanUpBuffers();
 
         updateEffects(delta);
@@ -64,8 +60,7 @@ public class GameView implements Disposable {
         vfxManager.beginInputCapture();
         batch.begin();
         batch.draw(bg, -Gdx.graphics.getWidth()/4f, -Gdx.graphics.getHeight()/4f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(img, player.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
-        batch.draw(img, player1.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player1.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
+        player.draw(batch);
         batch.end();
         vfxManager.endInputCapture();
 
@@ -77,7 +72,7 @@ public class GameView implements Disposable {
     {
         OrthographicCamera cam;
         cam = new OrthographicCamera();
-        cam.setToOrtho(false, (float) Gdx.graphics.getWidth() / SCALE, (float) Gdx.graphics.getHeight() / SCALE);
+        cam.setToOrtho(false, (float) Gdx.graphics.getWidth() / 2.0f, (float) Gdx.graphics.getHeight() / 2.0f);
         return cam;
     }
 

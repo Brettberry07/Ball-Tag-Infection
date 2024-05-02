@@ -2,100 +2,85 @@ package com.Infection.main;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
 
 public class Player implements Disposable{
-    private boolean isGrounded = false;
-    private boolean isJumping = false;
-    private final Vector2 position;
-    private final Vector2 velocity = new Vector2(0,0);
-    private final Vector2 acceleration = new Vector2(1.5f,1f);
-    private final Sprite sprite;
+    private Body pBody;
+    private Texture pImg;
+
     private final String[] controls;
 
-
     //constructor
-    public Player(Texture img, String[] controls) {
-        this.sprite = new Sprite(img);
-        this.position = new Vector2((float) Gdx.graphics.getWidth() / 2, 0);
-        this.sprite.setScale(1);
+    public Player(int x, int y, World world, String[] controls) {
+        pImg = new Texture("Images/Player.png");
+        pBody = createBox(Gdx.graphics.getWidth()/4+x, Gdx.graphics.getHeight()/4+y, 32, 32, false, world); // This will be part of class later
         this.controls = controls;
+    }
+
+    public static Body createBox(int x, int y, int width, int height, boolean isStatic, World world)
+    {
+        Body pBody;
+        BodyDef def = new BodyDef();
+
+        if (isStatic)
+            def.type = BodyDef.BodyType.StaticBody;
+        else
+            def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(x / 32f, y / 32f);
+        def.fixedRotation = true;
+        pBody = world.createBody(def);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / 2f / 32f, height / 2f / 32f);
+
+        pBody.createFixture(shape, 1.0f);
+        shape.dispose();
+
+        return pBody;
     }
 
     //draw on screen
     public void draw(SpriteBatch batch) {
-        this.sprite.setPosition(position.x, position.y);
-        sprite.draw(batch);
-    }
-
-    //sets the position of the sprite, cords are bottom left
-    public void setPosition(int x, int y) {
-        this.position.x = x;
-        this.position.y = y;
+        batch.draw(pImg, pBody.getPosition().x * 32f - (pImg.getWidth() / 2f), pBody.getPosition().y * 32f - (pImg.getHeight() / 2f));
     }
 
     public void update(float delta){
-        this.vectorMovement(delta);
-        this.checkGrounded();
+        this.inputUpdate(delta);
     }
 
+    public void inputUpdate(float delta) { // again for loop each Player instance in class and update their horizontal forces and vertical forces
+        int horizontalForce = 0;
 
-    public void vectorMovement(float deltaTime){
-        final int SCREEN_WIDTH = 1280;
-        final int SCREEN_HEIGHT = 720;
-        final float SPEED = 10f;
-        final float JUMPFORCE = 750f;
-        final float GRAVITY_FORCE = -0.5f;
-
-        if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[0]))) {
-            if(isGrounded){
-                this.velocity.y = JUMPFORCE*deltaTime;
-                this.isJumping = !this.isJumping;
-            }
+        // p1
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))) {
+            horizontalForce -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
+            horizontalForce += 1;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))){
-            this.velocity.x = -SPEED;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(controls[0]))) {
+            pBody.applyForceToCenter(0, 400, false);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))){
-            this.velocity.x = SPEED;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(controls[2])))
+        {
+
         }
 
-
-        this.velocity.x *= this.acceleration.x;
-        this.velocity.y *= this.acceleration.y;
-
-        if(this.position.x + this.velocity.x > SCREEN_WIDTH - sprite.getWidth()){
-            this.position.x = SCREEN_WIDTH - sprite.getWidth();
-        }
-        if(this.position.x + this.velocity.x < 0){
-            this.position.x = 0;
-        }
-        if(this.position.y + this.velocity.y > SCREEN_HEIGHT){
-            this.position.y = SCREEN_HEIGHT;
-        }
-        if(this.position.y + this.velocity.y < 0){
-            this.position.y = 0;
-        }
-
-        if(!this.isGrounded){
-            this.velocity.y += GRAVITY_FORCE;
-        }
-
-        this.position.add(this.velocity);
-        this.velocity.x = 0;
-    }
-
-    private void checkGrounded(){
-        // use physics to do this
+        pBody.setLinearVelocity(horizontalForce * 5, pBody.getLinearVelocity().y);
     }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        pImg.dispose();
+    }
 }
