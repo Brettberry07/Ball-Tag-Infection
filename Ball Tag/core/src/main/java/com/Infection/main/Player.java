@@ -10,9 +10,6 @@ import com.badlogic.gdx.utils.Disposable;
 
 
 public class Player implements Disposable{
-
-
-
     //    private boolean isIt = false;
     private boolean isGrounded = false;
     private boolean isJumping = false;

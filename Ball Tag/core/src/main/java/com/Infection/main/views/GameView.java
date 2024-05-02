@@ -6,23 +6,25 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Disposable;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.*;
 import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.Infection.main.Player;
 
+import static com.Infection.main.utils.Settings.PixelsPerMeter;
+
 public class GameView implements Disposable {
-    SpriteBatch batch;
-    Texture img;
-    Player player1;
-    Player player2;
 
     private final VfxManager vfxManager;
 
     private final BloomEffect bloomEffect;
     private final FxaaEffect fxaaEffect;
     private final MotionBlurEffect motionBlurEffect;
+    private final CrtEffect crtEffect;
+    private final OldTvEffect oldTvEffect;
+    private final Texture bg;
 
     /*
         We will need to make a GameObjects array
@@ -31,12 +33,8 @@ public class GameView implements Disposable {
         more it'll be quite hectic to manage this codebase
      */
 
-    public GameView(Player player1, Player player2)
+    public GameView()
     {
-        this.player1 = player1;
-        this.player2 = player2;
-
-        batch = new SpriteBatch();
 
         OrthographicCamera cam = new OrthographicCamera();
 
@@ -45,26 +43,28 @@ public class GameView implements Disposable {
         bloomEffect = new BloomEffect();
         fxaaEffect = new FxaaEffect();
         motionBlurEffect = new MotionBlurEffect(Pixmap.Format.RGBA8888, MixEffect.Method.MAX, 0.25f);
+        crtEffect = new CrtEffect();
+        oldTvEffect = new OldTvEffect();
 
         vfxManager.addEffect(bloomEffect);
         vfxManager.addEffect(fxaaEffect);
         vfxManager.addEffect(motionBlurEffect);
+        vfxManager.addEffect(crtEffect);
+        vfxManager.addEffect(oldTvEffect);
+
+        bg = new Texture("untitled.png");
     }
 
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
+    public void render(float delta, SpriteBatch batch, Texture img, Body player, Body player1) {
         vfxManager.cleanUpBuffers();
 
         updateEffects(delta);
 
         vfxManager.beginInputCapture();
         batch.begin();
-        player1.draw(batch);
-        player1.update(delta);
-        player2.draw(batch);
-        player2.update(delta);
+        batch.draw(bg, -Gdx.graphics.getWidth()/4, -Gdx.graphics.getHeight()/4, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(img, player.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
+        batch.draw(img, player1.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player1.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
         batch.end();
         vfxManager.endInputCapture();
 
@@ -77,15 +77,21 @@ public class GameView implements Disposable {
         bloomEffect.update(delta);
         fxaaEffect.update(delta);
         motionBlurEffect.update(delta);
+        crtEffect.update(delta);
+        oldTvEffect.update(delta);
     }
 
     public void resize(int width, int height) {
-        // resize viewports and vfxManager here using parameters above
+        vfxManager.resize(width, height);
     }
 
     public void dispose()
     {
-        img.dispose();
-        batch.dispose();
+        bloomEffect.dispose();
+        fxaaEffect.dispose();
+        motionBlurEffect.dispose();
+        crtEffect.dispose();
+        oldTvEffect.dispose();
+        bg.dispose();
     }
 }
