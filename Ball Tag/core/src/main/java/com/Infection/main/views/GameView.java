@@ -1,19 +1,19 @@
 package com.Infection.main.views;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.*;
 import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.Infection.main.Player;
 
-import static com.Infection.main.utils.Settings.PixelsPerMeter;
+import static com.Infection.main.uitls.Settings.PixelsPerMeter;
+import static com.Infection.main.uitls.Settings.SCALE;
 
 public class GameView implements Disposable {
 
@@ -26,6 +26,8 @@ public class GameView implements Disposable {
     private final OldTvEffect oldTvEffect;
     private final Texture bg;
 
+    private Box2DDebugRenderer debugRenderer;
+
     /*
         We will need to make a GameObjects array
         that will be iterated and drawn soon, one
@@ -35,8 +37,7 @@ public class GameView implements Disposable {
 
     public GameView()
     {
-
-        OrthographicCamera cam = new OrthographicCamera();
+        debugRenderer = new Box2DDebugRenderer();
 
         vfxManager = new VfxManager(Pixmap.Format.RGB888);
 
@@ -62,7 +63,7 @@ public class GameView implements Disposable {
 
         vfxManager.beginInputCapture();
         batch.begin();
-        batch.draw(bg, -Gdx.graphics.getWidth()/4, -Gdx.graphics.getHeight()/4, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(bg, -Gdx.graphics.getWidth()/4f, -Gdx.graphics.getHeight()/4f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.draw(img, player.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
         batch.draw(img, player1.getPosition().x * PixelsPerMeter - (img.getWidth() / 2f), player1.getPosition().y * PixelsPerMeter - (img.getHeight() / 2f));
         batch.end();
@@ -72,13 +73,21 @@ public class GameView implements Disposable {
         vfxManager.renderToScreen();
     }
 
+    public OrthographicCamera createCam()
+    {
+        OrthographicCamera cam;
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, (float) Gdx.graphics.getWidth() / SCALE, (float) Gdx.graphics.getHeight() / SCALE);
+        return cam;
+    }
+
     private void updateEffects(float delta)
     {
         bloomEffect.update(delta);
         fxaaEffect.update(delta);
         motionBlurEffect.update(delta);
         crtEffect.update(delta);
-        oldTvEffect.update(delta);
+        //oldTvEffect.update(delta);
     }
 
     public void resize(int width, int height) {
@@ -93,5 +102,6 @@ public class GameView implements Disposable {
         crtEffect.dispose();
         oldTvEffect.dispose();
         bg.dispose();
+        debugRenderer.dispose();
     }
 }

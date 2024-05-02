@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Disposable;
 
 
 public class Player implements Disposable{
-    //    private boolean isIt = false;
     private boolean isGrounded = false;
     private boolean isJumping = false;
     private final Vector2 position;
@@ -91,19 +90,10 @@ public class Player implements Disposable{
 
         this.position.add(this.velocity);
         this.velocity.x = 0;
-
-
     }
 
     private void checkGrounded(){
-        if(this.position.y<=0){
-            this.isGrounded = true;
-            this.isJumping = false;
-            this.position.y = 0;
-        }
-        else{
-            this.isGrounded = false;
-        }
+        // use physics to do this
     }
 
     @Override

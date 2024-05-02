@@ -1,7 +1,6 @@
 package com.Infection.main.screens;
 
 import com.Infection.main.views.GameView;
-import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -11,15 +10,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 
-import java.security.Key;
-
-import static com.Infection.main.utils.Settings.PixelsPerMeter;
+import static com.Infection.main.uitls.Settings.PixelsPerMeter;
+import static com.Infection.main.uitls.Settings.SCALE;
 
 public class GameScreen extends ScreenAdapter {
-    private final float SCALE = 2.0f;
     private GameView gameView;
     private SpriteBatch batch;
     private Texture img;
@@ -40,8 +36,7 @@ public class GameScreen extends ScreenAdapter {
 
         gameView = new GameView();
 
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, (float) Gdx.graphics.getWidth() / SCALE, (float) Gdx.graphics.getHeight() / SCALE);
+        cam = gameView.createCam();
 
         world = new World(new Vector2(0, -9.8f), false);
         debugRenderer = new Box2DDebugRenderer();
@@ -52,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
 
         img = new Texture("Player.png");
 
-        theme = Gdx.audio.newMusic(Gdx.files.internal("GameOver.wav"));
+        theme = Gdx.audio.newMusic(Gdx.files.internal("Tag.wav"));
         theme.setLooping(true);
         theme.play();
     }
@@ -124,6 +119,7 @@ public class GameScreen extends ScreenAdapter {
         debugRenderer.dispose();
         batch.dispose();
         img.dispose();
+        gameView.dispose();
     }
 
     private void update(float delta)
