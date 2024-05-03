@@ -11,17 +11,19 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
 
-public class Player implements Disposable{
+public class Player{
     private Body pBody;
     private Texture pImg;
 
-    private final String[] controls;
+    private final String controls;
 
     //constructor
-    public Player(int x, int y, World world, String[] controls) {
+    public Player(int x, int y, World world, String controls) {
         pImg = new Texture("Images/Player.png");
         pBody = createBox(Gdx.graphics.getWidth()/4+x, Gdx.graphics.getHeight()/4+y, 32, 32, false, world); // This will be part of class later
+        //super(pImg, pBody);
         this.controls = controls;
+
     }
 
     public static Body createBox(int x, int y, int width, int height, boolean isStatic, World world)
@@ -60,18 +62,18 @@ public class Player implements Disposable{
         int horizontalForce = 0;
 
         // p1
-        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[1]))) {
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(1))))) {
             horizontalForce -= 1;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(controls[3]))) {
+        if (Gdx.input.isKeyPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(3))))) {
             horizontalForce += 1;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(controls[0]))) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(0))))) {
             pBody.applyForceToCenter(0, 400, false);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(controls[2])))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(2)))))
         {
 
         }
@@ -79,7 +81,7 @@ public class Player implements Disposable{
         pBody.setLinearVelocity(horizontalForce * 5, pBody.getLinearVelocity().y);
     }
 
-    @Override
+    //@Override
     public void dispose() {
         pImg.dispose();
     }

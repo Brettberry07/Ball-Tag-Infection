@@ -1,5 +1,6 @@
 package com.Infection.main.screens;
 
+import com.Infection.main.GameObject;
 import com.Infection.main.Player;
 import com.Infection.main.views.GameView;
 import com.badlogic.gdx.Gdx;
@@ -11,8 +12,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter{
     private GameView gameView;
     private SpriteBatch batch;
 //    private Texture img;
@@ -25,6 +27,8 @@ public class GameScreen extends ScreenAdapter {
 
     private Music theme;
 
+    private Array<GameObject> gameObjects;
+
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -36,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
         world = new World(new Vector2(0, -9.8f), false);
         debugRenderer = new Box2DDebugRenderer();
 
-        player = new Player(8, 25, world, ); // fix this
+        player = new Player(8, 25, world, "WASD");
         Body platform = createBox(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 4 - 50, 512, 32, true, world); // gonna be part of tilemap later
 
         theme = Gdx.audio.newMusic(Gdx.files.internal("Audio/Tag.wav"));
