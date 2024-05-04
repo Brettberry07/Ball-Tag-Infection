@@ -1,5 +1,9 @@
 package com.Infection.main.utils;
 
+/*
+Self explanatory
+ */
+
 public final class Settings {
     public static final float PixelsPerMeter = 32f;
     public static final float SCALE = 2.0f;
