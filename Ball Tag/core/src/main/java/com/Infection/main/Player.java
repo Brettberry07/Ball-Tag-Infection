@@ -42,11 +42,6 @@ public class Player extends GameObject{
             this.body.applyForceToCenter(0, 400, false);
         }
 
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(2)))))
-//        {
-//
-//        }
-
         this.body.setLinearVelocity(this.horizontalForce * 5, this.body.getLinearVelocity().y);
     }
 }

@@ -2,6 +2,7 @@ package com.Infection.main.screens;
 
 import com.Infection.main.GameObject;
 import com.Infection.main.Player;
+import com.Infection.main.Settings;
 import com.Infection.main.utils.Populator;
 import com.Infection.main.views.GameView;
 import com.badlogic.gdx.Game;
@@ -102,12 +103,29 @@ public class GameScreen extends ScreenAdapter{
     {
         world.step(1 / 60f, 6, 2);
 
-        cam.update();
+        camUpdate();
 
         for (GameObject player : gameObjects)
         {
             player.update(delta);
         }
         batch.setProjectionMatrix(cam.combined);
+    }
+
+    private void camUpdate() // Camera controller
+    {
+        float pValx = Gdx.graphics.getWidth()/2f;
+        float pValy = Gdx.graphics.getHeight()/2f;
+
+        for (GameObject player : gameObjects)
+        {
+            pValx += player.getPosition().x;
+            pValy += player.getPosition().y;
+        }
+
+        pValx *= 0.25f;
+        pValy *= 0.25f;
+        cam.position.set(new Vector2((pValx) * Settings.SCALE,(pValy) * Settings.SCALE ), Settings.SCALE);
+        cam.update();
     }
 }
