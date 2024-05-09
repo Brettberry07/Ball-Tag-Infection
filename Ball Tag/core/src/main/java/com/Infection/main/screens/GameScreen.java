@@ -55,6 +55,7 @@ public class GameScreen extends ScreenAdapter{
 
         theme = Gdx.audio.newMusic(Gdx.files.internal("Audio/Tag.wav"));
         theme.setLooping(true);
+        theme.setVolume(0.05f);
         theme.play();
     }
 
