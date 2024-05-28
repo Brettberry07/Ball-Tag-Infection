@@ -4,20 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 import static com.Infection.main.utils.Box2DBodyCreator.createBody;
 
 public class Player extends GameObject{
 
     private final String controls;
+
     int horizontalForce = 0;
+    private int jumpCounter = 0;
+
 
     //constructor
     public Player(int x, int y, World world, String controls) {
-        super(new Texture("Images/Player.png"), createBody(Gdx.graphics.getWidth()/4+x, Gdx.graphics.getHeight()/4+y, 32, 32, false, world));
 
+        super(new Texture("Images/NewPurpleSlime.png"), createBody(Gdx.graphics.getWidth()/4+x, Gdx.graphics.getHeight()/4+y, 32, 32, false, world));
         this.controls = controls;
-
     }
 
     @Override
@@ -27,6 +30,7 @@ public class Player extends GameObject{
 
     public void inputUpdate(float delta) {
         this.horizontalForce = 0;
+        this.checkGrounded();
 
         // 0 = UP | 1 = LEFT | 2 = DOWN | 3 = RIGHT
 
@@ -38,10 +42,17 @@ public class Player extends GameObject{
             this.horizontalForce += 1;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(0))))) {
-            this.body.applyForceToCenter(0, 400, false);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(String.valueOf(controls.charAt(0)))) && this.jumpCounter < 2) {
+            this.body.applyForceToCenter(0, 150, false);
+            this.jumpCounter++;
         }
 
         this.body.setLinearVelocity(this.horizontalForce * 5, this.body.getLinearVelocity().y);
+    }
+
+    private void checkGrounded(){
+        if(this.body.getPosition().y < 1){
+            jumpCounter = 0;
+        }
     }
 }
