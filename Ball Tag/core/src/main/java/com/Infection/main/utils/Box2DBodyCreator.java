@@ -26,7 +26,7 @@ public class Box2DBodyCreator {
         pBody = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f / 32f, height / 2f / 32f);
+        shape.setAsBox(width / 2f / 35f, height / 2f / 65f);
 
         pBody.createFixture(shape, 1.0f);
         shape.dispose();
