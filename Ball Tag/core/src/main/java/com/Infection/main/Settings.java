@@ -10,4 +10,5 @@ public class Settings {
 
     public static int num_players = 3;
     public static String[] controlls = {"WASD", "IJKL", "TFGH", "1234"};
+    public static int index = 0;
 }
