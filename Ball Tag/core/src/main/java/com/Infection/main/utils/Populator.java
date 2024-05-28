@@ -17,7 +17,7 @@ Populates the world in GameScreen with all objects, players, collidables, etc.
 
 public class Populator {
     public static void populate(World world, Array<GameObject> gameObjects){
-        Body platform = createBody(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 4 - 50, 512, 32, true, world);
+        Body platform = createBody(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 4 - 50, `1280, 32, true, world);
 
         for (int i = 0; i < Settings.num_players; i++)
         {
