@@ -48,7 +48,7 @@ public class GameScreen extends ScreenAdapter{
 
         cam = gameView.createCam();
 
-        world = new World(new Vector2(0, -9.8f), false);
+        world = new World(new Vector2(0, -12.5f), false);
         debugRenderer = new Box2DDebugRenderer();
 
         Populator.populate(world, gameObjects);
